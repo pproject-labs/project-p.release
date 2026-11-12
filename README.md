@@ -263,7 +263,7 @@ project-p api manga.get --param mangaId=<manga-id> --json
 project-p api library.create --json --data '{
   "name": "Manga",
   "libraryPath": {
-    "path": "/data/library",
+    "path": "/path/to/library",
     "ownershipMode": "managed",
     "isDefaultOrganizePath": true
   }
