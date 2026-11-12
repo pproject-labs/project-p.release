@@ -208,7 +208,7 @@ https://github.com/pproject-labs/project-p.release
 3. Prefer Docker for an always-on server and the desktop app for a single computer. Use the
    standalone installer only when I ask for it.
 4. Start Project P and give me the Web URL. Pair the CLI with `project-p login --local`
-   for a standalone server, or with the Pairing Code from the logs for Docker.
+   for a standalone server, or `docker exec project-p project-p login --local` for Docker.
 5. Create one library with `project-p library init` (prefix with `docker exec project-p` in
    Docker), run the initial scan, and verify `project-p api health.get --json` and
    `project-p api library.list --json`.
