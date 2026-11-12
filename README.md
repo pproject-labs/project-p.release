@@ -188,7 +188,7 @@ Use `--ownership referenced` when Project P must keep an existing folder read-on
 also starts the initial scan and waits for it by default.
 
 The browser shows the same result. If the folder is empty, put CBZ/CBR/ZIP files there and run
-`project-p library scan <library-id>`, or use the Refresh action in the Web app.
+`project-p library scan "$LIBRARY_ID"`, or use the Refresh action in the Web app.
 
 ## Agent-assisted setup
 
@@ -236,6 +236,9 @@ Agent rules:
 `project-p <command> --help`. For a remote Control Plane, pass
 `--api-url https://your-host/api` (or set `PROJECT_P_API_URL`) before the command.
 
+The table uses `<...>` placeholders; replace them before running. The API examples below use
+shell variables such as `$MANGA_ID` for values returned by earlier commands.
+
 | Task                         | Command                                                                                                |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------ |
 | Serve the Web client and API | `project-p serve --open`                                                                               |
@@ -257,7 +260,7 @@ subscriptions, reading state, downloads, backups, and settings.
 ```sh
 # List libraries or read one manga
 project-p api library.list --json
-project-p api manga.get --param mangaId=<manga-id> --json
+project-p api manga.get --param "mangaId=$MANGA_ID" --json
 
 # Create a library with its first Library Path
 project-p api library.create --json --data '{
@@ -270,7 +273,7 @@ project-p api library.create --json --data '{
 }'
 
 # Update user-owned manga metadata
-project-p api manga.metadata.update --param mangaId=<manga-id> --json --data '{
+project-p api manga.metadata.update --param "mangaId=$MANGA_ID" --json --data '{
   "title": "Example",
   "status": "ongoing",
   "contentRating": "safe",
@@ -279,7 +282,8 @@ project-p api manga.metadata.update --param mangaId=<manga-id> --json --data '{
 
 # Create a collection, then add a manga
 project-p api collection.create --json --data '{"name":"Favorites"}'
-project-p api collection.manga.add --param collectionId=<collection-id> --param mangaId=<manga-id>
+project-p api collection.manga.add \
+  --param "collectionId=$COLLECTION_ID" --param "mangaId=$MANGA_ID"
 ```
 
 Use `--paginate` for cursor-paginated list operations, `--input -` for a request body from
@@ -288,7 +292,7 @@ method and path form:
 
 ```sh
 project-p api get /library
-project-p api patch /library/<library-id> --data '{"name":"Renamed"}'
+project-p api patch "/library/$LIBRARY_ID" --data '{"name":"Renamed"}'
 ```
 
 Discover operation IDs with `project-p openapi`; the generated Contract is the source of truth.
@@ -297,21 +301,21 @@ Discover operation IDs with `project-p openapi`; the generated Contract is the s
 
 Project P includes built-in Source Extensions. The list is visible in **Settings → 扩展** or
 through `project-p api extension.list`. Use `project-p api extension.get` with
-`--param extensionKey=<key>` for one extension's configuration and session state.
+`--param "extensionKey=$EXTENSION_KEY"` for one extension's configuration and session state.
 
 ```sh
 project-p extension search ehentai --query "example" --json
-project-p api library.path.list --param libraryId=<library-id> --json
-project-p manga import <library-id> \
-  --library-path-id <library-path-id> \
+project-p api library.path.list --param "libraryId=$LIBRARY_ID" --json
+project-p manga import "$LIBRARY_ID" \
+  --library-path-id "$LIBRARY_PATH_ID" \
   --extension ehentai \
-  --external-id <external-id> --json
-project-p download <manga-id> --chapter <chapter-id> --json
+  --external-id "$EXTERNAL_ID" --json
+project-p download "$MANGA_ID" --chapter "$CHAPTER_ID" --json
 ```
 
 `manga import` waits for catalog import by default and prints the imported Manga. `download`
 waits for the Download Batch by default. Add `--no-wait` when an agent will poll with
-`project-p job watch` or `project-p api batch.get`.
+`project-p job watch "$JOB_ID"` or `project-p api batch.get`.
 
 ## Security
 
@@ -356,7 +360,7 @@ automatically.
 | Permission denied on a mount    | The container runs as UID `10001`; fix the mount ownership or use a managed path under `/data`                    |
 | Port 8800 is in use             | Change the published port or `PROJECT_P_BIND`                                                                     |
 | macOS or Windows blocks the app | Verify `SHA256SUMS`, then use the system approval flow                                                            |
-| A scan finds nothing            | Confirm the Library Path contains CBZ/CBR/ZIP files and run `project-p library scan <library-id>`                 |
+| A scan finds nothing            | Confirm the Library Path contains CBZ/CBR/ZIP files and run `project-p library scan "$LIBRARY_ID"`                |
 
 Logs are under `<data-dir>/logs`; Docker logs are available with `docker logs project-p`.
 
