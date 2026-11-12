@@ -69,7 +69,8 @@ docker exec project-p project-p pair --public-url http://localhost:8800
 ```
 
 If the standalone CLI runs on the host, `docker exec project-p project-p pair` prints a code
-that can be exchanged with `project-p login <code> --api-url http://localhost:8800/api`.
+that can be exchanged with
+`project-p --api-url http://localhost:8800/api login <code>`.
 
 To use existing Manga files, mount their host directory and enter the **container path** when
 adding a Library Path:
@@ -177,6 +178,10 @@ For Docker, run the CLI inside the container:
 docker exec project-p project-p login --local
 docker exec project-p project-p library init /data/library --name "Manga"
 ```
+
+The CLI session created by `docker exec` lives inside the container; repeat `login --local`
+after recreating the container. A host CLI paired with
+`project-p --api-url http://localhost:8800/api login <code>` keeps its session on the host.
 
 Use `--ownership referenced` when Project P must keep an existing folder read-only. The default
 `managed` mode allows Project P to place downloaded and organized files there. `library init`
@@ -290,8 +295,9 @@ Discover operation IDs with `project-p openapi`; the generated Contract is the s
 
 ### Sources, downloads, and jobs
 
-Project P includes built-in Source Extensions. The exact list and configuration are visible in
-**Settings → 扩展** or through `project-p api extension.list`.
+Project P includes built-in Source Extensions. The list is visible in **Settings → 扩展** or
+through `project-p api extension.list`. Use `project-p api extension.get` with
+`--param extensionKey=<key>` for one extension's configuration and session state.
 
 ```sh
 project-p extension search ehentai --query "example" --json
