@@ -313,6 +313,17 @@ project-p download <manga-id> --chapter <chapter-id> --json
 waits for the Download Batch by default. Add `--no-wait` when an agent will poll with
 `project-p job watch` or `project-p api batch.get`.
 
+## Security
+
+- The standalone server binds `127.0.0.1` by default. LAN access is opt-in and requires
+  pairing.
+- Pairing Codes are single-use, expire after five minutes, and grant access to the Control
+  Plane. Treat them as credentials.
+- Put a TLS reverse proxy in front of an internet-facing instance. Do not expose the direct
+  HTTP listener to the public internet.
+- The data directory contains catalog state and may contain Source Extension sessions. Keep it
+  private and out of public backups or logs.
+
 ## Data, backup, and upgrade
 
 - Standalone data defaults to `~/.project-p`; Docker data lives in the `project-p-data` volume.
