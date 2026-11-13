@@ -11,9 +11,6 @@ the server from any browser. Your files stay on the machine you control.
 
 These are early builds. Packages are unsigned.
 
-> **Release status:** the first Latest release after the channel update may still be pending.
-> If the Latest link has no files yet, use the newest Nightly build.
-
 ## Getting started
 
 ### Desktop
